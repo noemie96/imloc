@@ -15,13 +15,14 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 class AnnonceType extends AbstractType
 {
 
-        private function getConfiguration($label,$placeholder){
-            return[
-                'label'=>$label,
-                'attr'=>[
-                    'placeholder'=>$placeholder
-                ]
-                ];
+        private function getConfiguration($label,$placeholder, $options=[]){
+            return array_merge([
+                
+                    'label'=>$label,
+                    'attr'=>[
+                        'placeholder'=>$placeholder
+                    ]
+                    ], $options);
         }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -32,7 +33,9 @@ class AnnonceType extends AbstractType
                     'placeholder'=>"titre de votre annonce"
                 ]
             ])
-            ->add('slug', TextType::class, $this->getConfiguration('slug','Adresse web(automatique)'))//ex avec getconfig
+            ->add('slug', TextType::class, $this->getConfiguration('slug','Adresse web(automatique)',[
+                'required'=>false
+            ]))//ex avec getconfig
             ->add('rooms', IntegerType::class, $this->getConfiguration('Nombre de chambre','Donnez le nombre de chambre disponibles'))
             ->add('price', MoneyType::class, $this->getConfiguration('Prix par nuit','indiquer le prix que vous voulez pour une nuit'))
             ->add('introduction', TextType::class, $this->getConfiguration('introduction','Donnez une description globale de l\'annonce'))
