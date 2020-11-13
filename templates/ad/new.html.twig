@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block title %}Création d'une annonce{% endblock %}
 
-{% form_theme myForm _self %}
+
 
 {% block body %}
 <div class="container">
@@ -13,19 +13,5 @@
             <button type="submit" class=" btn btn-primary">Création d'une annonce</button>
      {{ form_end(myForm) }}   
 </div>
-{% endblock %}
-
-{#form est la variable générique vu que c'est pour un form_theme #}
-{% block form_row %}
-     <div class="form-group">
-          {{ form_label(form) }}
-          {{ form_widget(form) }}
-          {{form_errors(form) }}
-          {{ form_help(form) }}
-     </div>
-{% endblock %}
-
-{% block text_widget %}
-<input type="text" name="{{full_name}}" id="{{id}}" class="form-control">
 {% endblock %}
 
