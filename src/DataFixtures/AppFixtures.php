@@ -21,21 +21,35 @@ class AppFixtures extends Fixture
         $this->encoder = $encoder;
     }
 
+   
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create('FR-fr');
         //$slugify = new Slugify();
 
+        $admin = new User();
+        $admin->setFirstName('Nono')
+            ->setLastName('Françouille')
+            ->setEmail('nono@hotmail.com')
+            ->setPassword($this->encoder->encodePassword($admin,'password'))
+            ->setIntroduction($faker->sentence())
+            ->setDescription('<p>'.join('</p><p>', $faker->paragraphs(3)).'</p>')
+            ->setRoles(['ROLE_ADMIN']);
+        $manager->persist($admin);
+
+
         // gestion des utilisateurs 
         $users = []; // initialisation d'un tableau pour associer Ad et User
         $genres = ['male','femelle'];
 
-        for($u=1; $u <= 10; $u++){ //compteur du for php classique boucle tant que a qui à commencé à 1 je continue à bouclé 
+        for($u=1; $u <= 10; $u++){
             $user = new User();
             $genre = $faker->randomElement($genres);
 
             $picture = 'https://randomuser.me/api/portraits/';
             $pictureId = $faker->numberBetween(1,99).'.jpg';
+            // https://randomuser.me/api/portraits/women/25.jpg 
+            // $picture = $picture.'women/.'25.jpg'
             $picture .= ($genre == 'male' ? 'men/' : 'women/').$pictureId;
 
             $hash = $this->encoder->encodePassword($user,'password');
@@ -46,13 +60,14 @@ class AppFixtures extends Fixture
                 ->setIntroduction($faker->sentence())
                 ->setDescription('<p>'.join('</p><p>', $faker->paragraphs(3)).'</p>')
                 ->setPassword($hash)
-                ->setPicture($picture);
+                ->setPicture('');
 
             $manager->persist($user);
             $users[]= $user; // ajouter l'utilisateur fraichement créé dans le tableau pour l'association avec les annonces    
 
         }
-        //gestions des annonces
+
+        // gestion des annonces
         for($a = 1; $a <= 30; $a++){
             $ad = new Ad();
             $title = $faker->sentence();
@@ -84,6 +99,7 @@ class AppFixtures extends Fixture
 
 
         }
+
         $manager->flush();
     }
 }
