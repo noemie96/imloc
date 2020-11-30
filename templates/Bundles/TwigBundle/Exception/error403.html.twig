@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vous n'avez pas le droit d'accéder à cette ressource{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1> Accès refusé</h1>
+        <div class="row justify-content-center">
+        <div class="col-auto">
+        <img src="https://media3.giphy.com/media/njYrp176NQsHS/giphy-downsized-large.gif" alt="Gandalf" class="img-fluid">
+            </div>
+        </div>
+        <br/>
+        <div class="alert alert-danger">
+            <p>Vous n'avez pas le droit d'accéder à cette ressource! </p>
+            <p>
+                {# attention avec le cache #}
+                {{ exception.message}}
+            </p>
+        </div>
+        <a href="{{ path('homepage')}}" class="btn btn-primary">Retour à l'accueil</a>
+    </div>
+{% endblock %}
