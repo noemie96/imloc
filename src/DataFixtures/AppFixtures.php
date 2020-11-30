@@ -7,6 +7,7 @@ use Faker\Factory;
 //use Cocur\Slugify\Slugify;
 use App\Entity\User;
 use App\Entity\Image;
+use App\Entity\Booking;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -28,14 +29,15 @@ class AppFixtures extends Fixture
         //$slugify = new Slugify();
 
         $admin = new User();
-        $admin->setFirstName('Nono')
-            ->setLastName('Françouille')
-            ->setEmail('nono@hotmail.com')
+        $admin->setFirstName('Jordan')
+            ->setLastName('Berti')
+            ->setEmail('berti@epse.be')
             ->setPassword($this->encoder->encodePassword($admin,'password'))
             ->setIntroduction($faker->sentence())
             ->setDescription('<p>'.join('</p><p>', $faker->paragraphs(3)).'</p>')
             ->setRoles(['ROLE_ADMIN']);
         $manager->persist($admin);
+
 
 
         // gestion des utilisateurs 
@@ -94,6 +96,32 @@ class AppFixtures extends Fixture
                     ->setCaption($faker->sentence())
                     ->setAd($ad);
                 $manager->persist($image);    
+            }
+
+            // gestion des réservation 
+            for($b = 1; $b <= rand(0,10); $b++){
+                $booking = new Booking();
+                $createdAt = $faker->dateTimeBetween('-6 months','-4 months');
+                $startDate = $faker->dateTimeBetween('-3 months');
+
+                $duration = rand(3,10);
+                // objet datetime de php
+                // $startDate->modify("+5 days") parce que modify va modifier la startDate directement, on doit cloner l'objet
+                $endDate = (clone $startDate)->modify("+$duration days");
+                $amount = $ad->getPrice() * $duration;
+                $comment = $faker->paragraph();
+                $booker = $users[rand(0,count($users)-1)];
+
+                $booking->setBooker($booker)
+                        ->setAd($ad)
+                        ->setStartDate($startDate)
+                        ->setEndDate($endDate)
+                        ->setCreatedAt($createdAt)
+                        ->setAmount($amount)
+                        ->setComment($comment)
+                        ;
+                $manager->persist($booking);
+
             }
             
 
